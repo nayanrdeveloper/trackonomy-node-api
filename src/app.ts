@@ -2,10 +2,13 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
+import authRoutes from '../src/modules/auth/auth.routes';
+
 import userRoutes from './modules/user/user.routes';
 import expenseRoutes from './modules/expense/expense.routes';
 import { errorHandler } from './errors/errorMiddleware';
 import { notFoundHandler } from './middlewares/notFoundMiddleware';
+import { authMiddleware } from './middlewares/auth.middleware';
 
 dotenv.config();
 
@@ -14,9 +17,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/auth', authRoutes);
+
 // ✅ Register your routes
-app.use('/api/users', userRoutes);
-app.use('/api/expenses', expenseRoutes);
+app.use('/api/users', authMiddleware, userRoutes);
+app.use('/api/expenses', authMiddleware, expenseRoutes);
 
 // ✅ 404 handler if no route matches
 app.use(notFoundHandler);
