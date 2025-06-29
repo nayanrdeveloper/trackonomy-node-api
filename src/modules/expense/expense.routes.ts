@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import expenseController from './expense.controller';
 
 const router = Router();
